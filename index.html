@@ -240,6 +240,12 @@
           font-weight: 900;
           color: var(--ei-secondary-dark);
         }
+        .bp-sub {
+          font-size: 11px;
+          color: var(--text-muted);
+          margin-top: 4px;
+          font-weight: 500;
+        }
         .bp-card.active .bp-val {
           color: var(--ei-primary);
         }
@@ -396,7 +402,7 @@
           color: var(--ei-primary);
         }
 
-        /* Order Summary Checkout Card with Section 3 Nested */
+        /* Order Summary Checkout Card */
         .order-card {
           background: var(--surface);
           border: 1px solid var(--border-color);
@@ -439,6 +445,34 @@
         }
         .oc-line.saving strong {
           color: var(--success);
+        }
+
+        /* Student Counter Input */
+        .student-counter-row {
+          background: #f8fafc;
+          border: 1px solid var(--border-color);
+          border-radius: 8px;
+          padding: 10px 14px;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 16px;
+        }
+        .student-counter-row label {
+          font-size: 12px;
+          font-weight: 700;
+          color: var(--ei-secondary-dark);
+          text-transform: uppercase;
+        }
+        .student-counter-row input {
+          width: 80px;
+          padding: 6px 10px;
+          border-radius: 6px;
+          border: 1.5px solid var(--border-color);
+          font-weight: 800;
+          font-size: 14px;
+          text-align: center;
+          color: var(--ei-primary);
         }
 
         /* Nested Section 3: Promotional Campaign Inside Order Summary */
@@ -567,6 +601,37 @@
           border-radius: 6px;
         }
 
+        /* Free Teacher SkillBook Box */
+        .teacher-perk-box {
+          background: linear-gradient(135deg, #fffdfd 0%, #f5fff6 100%);
+          border: 1.5px dashed #059669;
+          border-radius: 10px;
+          padding: 16px;
+          margin-top: 18px;
+        }
+        .tpb-title {
+          font-size: 12px;
+          font-weight: 800;
+          color: #059669;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+          margin-bottom: 6px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+        }
+        .tpb-count {
+          font-size: 20px;
+          font-weight: 900;
+          color: var(--ei-secondary-dark);
+          margin-bottom: 4px;
+        }
+        .tpb-note {
+          font-size: 11.5px;
+          color: var(--text-muted);
+          line-height: 1.4;
+        }
+
         .pdf-btn {
           background: var(--ei-primary);
           color: white;
@@ -677,6 +742,15 @@
           color: var(--ei-primary);
         }
 
+        .doc-perk {
+          margin-top: 16px;
+          padding: 12px;
+          border: 1px dashed var(--ei-primary);
+          background: #fffdfd;
+          border-radius: 6px;
+          font-size: 11px;
+        }
+
         .doc-footer {
           margin-top: 36px;
           text-align: center;
@@ -738,7 +812,7 @@
     <div class="stage-box web-app-view" id="setupView">
       <h2 class="stage-title">Configure School Baseline</h2>
       <p class="stage-desc">
-        Enter the school's account details and current evaluation rate.
+        Enter school baseline pricing and enrolled student numbers.
       </p>
 
       <div class="input-group">
@@ -750,12 +824,22 @@
         />
       </div>
       <div class="input-group">
-        <label for="inputAssetPrice">Current ASSET Price (Per Student)</label>
+        <label for="inputAssetPrice">Current ASSET Price Per Student (₹)</label>
         <input
           type="number"
           id="inputAssetPrice"
           placeholder="e.g. 600"
-          min="0"
+          min="1"
+        />
+      </div>
+      <div class="input-group">
+        <label for="inputStudentCount">Estimated Enrolled Students</label>
+        <input
+          type="number"
+          id="inputStudentCount"
+          placeholder="e.g. 45"
+          min="1"
+          value="45"
         />
       </div>
       <p
@@ -769,7 +853,7 @@
           margin: -5px 0 12px 0;
         "
       >
-        Please complete all fields with valid values.
+        Please complete all fields with valid numbers.
       </p>
       <button class="primary-btn" onclick="proceedToCheckout()">
         Open Checkout Dashboard
@@ -786,21 +870,6 @@
             >Evaluation & Skillbook Implementation Blueprint (AY 2027)</span
           >
         </div>
-        <button
-          style="
-            background: transparent;
-            border: 1px solid var(--border-color);
-            padding: 8px 14px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--ei-secondary-dark);
-          "
-          onclick="editSchoolDetails()"
-        >
-          Change Baseline
-        </button>
       </div>
 
       <div class="checkout-grid">
@@ -809,12 +878,21 @@
           <div class="section-tag">1. Baseline Assessment Pricing</div>
           <div class="base-pricing-row">
             <div class="bp-card">
+              <div class="bp-label">Actual Product Price</div>
+              <div class="bp-val" id="valActualProduct">₹0</div>
+              <div class="bp-sub" id="valProjectionRule">
+                selling price per student
+              </div>
+            </div>
+            <div class="bp-card">
               <div class="bp-label">Current AY26 Base Price</div>
               <div class="bp-val" id="valCurrentAsset">₹0</div>
+              <div class="bp-sub">Existing Contract Rate</div>
             </div>
             <div class="bp-card active">
-              <div class="bp-label">Projected AY27 Base Price (+10%)</div>
+              <div class="bp-label">Projected AY27 Base (+10%)</div>
               <div class="bp-val" id="valProjectedAsset">₹0</div>
+              <div class="bp-sub">Projected ASSET Rate</div>
             </div>
           </div>
 
@@ -1016,12 +1094,23 @@
           </div>
         </div>
 
-        <!-- Right: Checkout Order Summary Card (Now containing Section 3) -->
+        <!-- Right: Checkout Order Summary Card -->
         <div class="checkout-right">
           <div class="order-card">
             <div class="oc-title">
               <span>Order Summary</span>
               <span class="oc-badge">AY 2027 Proposal</span>
+            </div>
+
+            <!-- Student Counter Row inside Summary -->
+            <div class="student-counter-row">
+              <label for="liveStudentCount">Students Enrolled</label>
+              <input
+                type="number"
+                id="liveStudentCount"
+                min="1"
+                oninput="updateStudentCount(this.value)"
+              />
             </div>
 
             <div class="oc-line">
@@ -1043,15 +1132,17 @@
             <!-- 3. Promotional Campaign Discounts (Moved Inside Order Summary) -->
             <div class="summary-promo-section">
               <div class="sps-header">
-                <span class="sps-title">3. Promotional Campaign</span>
+                <span class="sps-title">3. Promotional Incentive</span>
                 <span style="font-size: 11px; color: var(--text-muted)"
-                  >Incentive</span
+                  >Campaign</span
                 >
               </div>
               <div class="promo-row-compact">
                 <select id="promoSelector">
                   <option value="0">-- No Campaign Selected --</option>
-                  <option value="25">September Early Adoption (25% Off)</option>
+                  <option value="70">
+                    September Early Adoption (70% Off Skillbook MRP)
+                  </option>
                 </select>
                 <button class="promo-btn-compact" onclick="applyPromo()">
                   Apply
@@ -1065,6 +1156,11 @@
               <strong id="ocSavingsVal">- ₹0</strong>
             </div>
 
+            <div class="oc-line saving" id="ocVolumeLine" style="display: none">
+              <span id="ocVolumeTitle">Volume Discount</span>
+              <strong id="ocVolumeVal">- ₹0</strong>
+            </div>
+
             <div class="total-panel">
               <div class="total-label">Final Effective Rate / Student</div>
               <div class="total-amount" id="ocFinalTotal">₹0</div>
@@ -1074,6 +1170,29 @@
                   >Net Module Cost: ₹0</span
                 >
                 <span class="off-pill" id="ocOffPercent">0% OFF MRP</span>
+              </div>
+            </div>
+
+            <!-- Free Teacher SkillBook Box -->
+            <div class="teacher-perk-box">
+              <div class="tpb-title">
+                <span>Complimentary Teacher Books</span>
+                <span
+                  style="
+                    font-size: 10px;
+                    background: var(--ei-primary);
+                    color: white;
+                    padding: 2px 6px;
+                    border-radius: 4px;
+                  "
+                  >100% Free</span
+                >
+              </div>
+              <div class="tpb-count" id="teacherBooksCount">2 Free Books</div>
+              <div class="tpb-note" id="teacherBooksNote">
+                Estimated for 45 students across 2 class divisions (standard
+                30–35 students per class). 1 complimentary Teacher Edition
+                allocated per section.
               </div>
             </div>
 
@@ -1089,7 +1208,7 @@
     <div class="print-only-doc" id="printDocument">
       <div class="doc-header">
         <div class="logo">Ei</div>
-        <h2>Commercial Architecture Proposal</h2>
+        <h2>Commercial Estimate</h2>
         <p style="margin: 3px 0 0 0; font-size: 11px; color: #4a5568">
           Valid for Academic Year 2027 Adoption
         </p>
@@ -1099,13 +1218,15 @@
 
       <table class="doc-table">
         <tr>
-          <th colspan="2">1. Core Assessment Baseline (ASSET)</th>
+          <th colspan="3">1. Core Assessment Baseline (ASSET)</th>
         </tr>
         <tr class="doc-sub">
-          <td style="width: 50%">Current Baseline Rate</td>
-          <td style="width: 50%">Projected Rate for AY 2027 (+10%)</td>
+          <td style="width: 33%">Actual Product Price</td>
+          <td style="width: 33%">Current Baseline Rate (AY26)</td>
+          <td style="width: 34%">Projected Rate for AY 2027 (+10%)</td>
         </tr>
         <tr>
+          <td id="docActualRate">₹0</td>
           <td id="docCurrentRate">₹0</td>
           <td id="docProjectedRate">₹0</td>
         </tr>
@@ -1113,7 +1234,7 @@
 
       <table class="doc-table">
         <tr>
-          <th colspan="4">2. Selected Skillbook Curriculum Architecture</th>
+          <th colspan="4">2. Selected Skillbook Curriculum</th>
         </tr>
         <tr class="doc-sub">
           <td>Module Selected</td>
@@ -1159,6 +1280,15 @@
           <span id="docPromoAmount">- ₹0</span>
         </div>
 
+        <div
+          class="doc-row"
+          id="docVolumeRow"
+          style="color: var(--ei-primary); display: none"
+        >
+          <span id="docVolumeLabel">Volume Discount</span>
+          <span id="docVolumeAmount">- ₹0</span>
+        </div>
+
         <div class="doc-row total">
           <span>Final Cost Per Student:</span>
           <span id="docFinalTotal">₹0</span>
@@ -1179,6 +1309,14 @@
           >
           <span id="docSavingsPercent" style="color: #059669">0% OFF MRP</span>
         </div>
+
+        <div class="doc-perk" id="docPerkBox">
+          <strong>Complimentary Teacher Edition Allocation:</strong><br />
+          <span id="docPerkText"
+            >2 Free Teacher SkillBooks included based on student
+            enrollment.</span
+          >
+        </div>
       </div>
 
       <div class="doc-footer">
@@ -1188,9 +1326,10 @@
     </div>
 
     <script>
-      // State
       let currentAssetRate = 0;
       let projectedAssetRate = 0;
+      let actualProductPrice = 0;
+      let studentCount = 45;
       let schoolName = "";
       let appliedPromoPercent = 0;
       let appliedPromoName = "";
@@ -1212,6 +1351,14 @@
         window.location.reload();
       }
 
+      function computeActualProductPrice(currentRate) {
+        if (currentRate <= 600) {
+          return 900;
+        } else {
+          return Math.round((currentRate * 1.3) / 100) * 100;
+        }
+      }
+
       function proceedToCheckout() {
         const nameInput = document
           .getElementById("inputSchoolName")
@@ -1219,29 +1366,58 @@
         const priceInput = parseFloat(
           document.getElementById("inputAssetPrice").value,
         );
+        const countInput =
+          parseInt(document.getElementById("inputStudentCount").value) || 45;
 
-        if (!nameInput || isNaN(priceInput) || priceInput <= 0) {
+        if (
+          !nameInput ||
+          isNaN(priceInput) ||
+          priceInput <= 0 ||
+          countInput <= 0
+        ) {
           document.getElementById("setupError").style.display = "block";
           return;
         }
 
         schoolName = nameInput;
         currentAssetRate = priceInput;
-        projectedAssetRate = priceInput * 1.1;
+        studentCount = countInput;
+        projectedAssetRate = currentAssetRate * 1.1;
+        actualProductPrice = computeActualProductPrice(currentAssetRate);
 
         document.getElementById("setupView").style.display = "none";
         document.getElementById("checkoutView").style.display = "block";
 
-        // Render Static School Values
         document.getElementById("displaySchoolName").innerText = schoolName;
+        document.getElementById("liveStudentCount").value = studentCount;
+
         document.getElementById("valCurrentAsset").innerText =
           "₹" + currentAssetRate.toFixed(0);
         document.getElementById("valProjectedAsset").innerText =
           "₹" + projectedAssetRate.toFixed(0);
+        document.getElementById("valActualProduct").innerText =
+          "₹" + actualProductPrice.toFixed(0);
+
         document.getElementById("ocAssetVal").innerText =
           "₹" + projectedAssetRate.toFixed(0);
 
+        if (currentAssetRate <= 600) {
+          document.getElementById("valProjectionRule").innerText =
+            "Current ASSET Rate";
+        } else {
+          document.getElementById("valProjectionRule").innerText =
+            "Current ASSET Rate";
+        }
+
         recalculate();
+      }
+
+      function updateStudentCount(val) {
+        const count = parseInt(val) || 0;
+        if (count > 0) {
+          studentCount = count;
+          recalculate();
+        }
       }
 
       function editSchoolDetails() {
@@ -1271,7 +1447,6 @@
           .closest(".module-item")
           .querySelector(".discount-pill").innerText;
 
-        // Conditional Promotion Check: Exclude Standalone Modules
         const isStandalone = moduleName.includes("Standalone");
         let activeDiscountPercent = appliedPromoPercent;
         const alertBox = document.getElementById("promoAlertBox");
@@ -1279,9 +1454,10 @@
         if (appliedPromoPercent > 0) {
           alertBox.style.display = "block";
           if (isStandalone) {
-            activeDiscountPercent = 0; // Block promo
+            activeDiscountPercent = 0;
             alertBox.className = "promo-alert-compact warning";
-            alertBox.innerText = "⚠ Offer valid on Complete Suites only.";
+            alertBox.innerText =
+              "⚠ Promotional campaign is only eligible on Complete Core and Premium Suites.";
           } else {
             alertBox.className = "promo-alert-compact success";
             alertBox.innerText = "✓ " + appliedPromoName + " applied!";
@@ -1290,10 +1466,31 @@
           alertBox.style.display = "none";
         }
 
-        // Calculations
         const subtotal = projectedAssetRate + modulePrice;
-        const discountAmount = subtotal * (activeDiscountPercent / 100);
-        const finalTotal = subtotal - discountAmount;
+        let discountAmount = 0;
+
+        if (activeDiscountPercent === 70) {
+          let newSkillbookPrice = mrpPrice * 0.3;
+          discountAmount = modulePrice - newSkillbookPrice;
+          if (discountAmount < 0) discountAmount = 0;
+        } else if (activeDiscountPercent > 0) {
+          discountAmount = subtotal * (activeDiscountPercent / 100);
+        }
+
+        const subtotalAfterPromo = subtotal - discountAmount;
+
+        // Volume Discount Logic
+        let volumeDiscountPercent = 0;
+        if (studentCount > 1000) {
+          volumeDiscountPercent = 5;
+        } else if (studentCount > 500) {
+          volumeDiscountPercent = 2.5;
+        }
+
+        const volumeDiscountAmount =
+          subtotalAfterPromo * (volumeDiscountPercent / 100);
+
+        const finalTotal = subtotalAfterPromo - volumeDiscountAmount;
         const netCost = finalTotal - projectedAssetRate;
 
         let effectiveSavingsPercent = 0;
@@ -1304,7 +1501,9 @@
           );
         }
 
-        // Update Web Checkout UI
+        const estimatedSections = Math.ceil(studentCount / 35);
+        const freeTeacherBooks = estimatedSections;
+
         document.getElementById("ocModuleName").innerText = moduleName;
         document.getElementById("ocModuleVal").innerText = "₹" + modulePrice;
         document.getElementById("ocSubtotal").innerText =
@@ -1316,6 +1515,11 @@
         document.getElementById("ocOffPercent").innerText =
           effectiveSavingsPercent.toFixed(0) + "% OFF MRP";
 
+        document.getElementById("teacherBooksCount").innerText =
+          `${freeTeacherBooks} Free Teacher Edition${freeTeacherBooks > 1 ? "s" : ""}`;
+        document.getElementById("teacherBooksNote").innerText =
+          `Estimated for ${studentCount} students across ${estimatedSections} class section${estimatedSections > 1 ? "s" : ""} (standard 30–35 students per section). 1 complimentary Teacher Edition allocated per section.`;
+
         if (activeDiscountPercent > 0) {
           document.getElementById("ocPromoLine").style.display = "flex";
           document.getElementById("ocPromoTitle").innerText = appliedPromoName;
@@ -1325,12 +1529,26 @@
           document.getElementById("ocPromoLine").style.display = "none";
         }
 
-        // Update Print Document
+        if (volumeDiscountPercent > 0) {
+          document.getElementById("ocVolumeLine").style.display = "flex";
+          document.getElementById("ocVolumeTitle").innerText =
+            `Volume Discount (${volumeDiscountPercent}%)`;
+          document.getElementById("ocVolumeVal").innerText =
+            "- ₹" + volumeDiscountAmount.toFixed(2);
+        } else {
+          document.getElementById("ocVolumeLine").style.display = "none";
+        }
+
         document.getElementById("docSchoolName").innerText = schoolName;
         document.getElementById("docCurrentRate").innerText =
           "₹" + currentAssetRate.toFixed(0);
         document.getElementById("docProjectedRate").innerText =
           "₹" + projectedAssetRate.toFixed(0);
+        document.getElementById("docActualRate").innerText =
+          "₹" +
+          actualProductPrice.toFixed(0) +
+          (currentAssetRate <= 600 ? " (Fixed Base)" : " (+30% Rounded)");
+
         document.getElementById("docModuleName").innerText = moduleName;
         document.getElementById("docModuleMrp").innerText = mrpText;
         document.getElementById("docModuleDisc").innerText = discText;
@@ -1351,18 +1569,31 @@
           document.getElementById("docPromoRow").style.display = "none";
         }
 
+        if (volumeDiscountPercent > 0) {
+          document.getElementById("docVolumeRow").style.display = "flex";
+          document.getElementById("docVolumeLabel").innerText =
+            `Volume Discount (${volumeDiscountPercent}%)`;
+          document.getElementById("docVolumeAmount").innerText =
+            "- ₹" + volumeDiscountAmount.toFixed(2);
+        } else {
+          document.getElementById("docVolumeRow").style.display = "none";
+        }
+
         document.getElementById("docFinalTotal").innerText =
           "₹" + finalTotal.toFixed(2);
         document.getElementById("docNetCost").innerText =
           "₹" + netCost.toFixed(2);
         document.getElementById("docSavingsPercent").innerText =
           effectiveSavingsPercent.toFixed(0) + "% OFF MRP";
+
+        document.getElementById("docPerkText").innerText =
+          `${freeTeacherBooks} Complimentary Teacher Edition${freeTeacherBooks > 1 ? "s" : ""} included for ${studentCount} students (${estimatedSections} section${estimatedSections > 1 ? "s" : ""}).`;
       }
 
       function triggerPrint() {
         const originalTitle = document.title;
         const cleanName = schoolName.replace(/[^a-z0-9]/gi, "_");
-        document.title = `Ei_Commercial_Architecture_${cleanName}`;
+        document.title = `Ei_Commercial_Estimate_${cleanName}`;
         window.print();
         setTimeout(() => {
           document.title = originalTitle;
