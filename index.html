@@ -1,0 +1,1373 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ei | Commercial Architecture Checkout</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --ei-primary: #a01e21;
+        --ei-primary-light: #fff5f5;
+        --ei-secondary-dark: #2d3748;
+        --ei-secondary-light: #e2e8f0;
+        --bg-color: #f8fafc;
+        --surface: #ffffff;
+        --success: #059669;
+        --success-bg: #ecfdf5;
+        --text-muted: #718096;
+        --border-color: #e2e8f0;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: var(--bg-color);
+        color: var(--ei-secondary-dark);
+        margin: 0;
+        padding: 0;
+      }
+
+      @media screen {
+        .print-only-doc {
+          display: none !important;
+        }
+
+        /* Top Bar */
+        .top-nav {
+          background-color: var(--surface);
+          padding: 14px 5%;
+          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          border-bottom: 3px solid var(--ei-primary);
+          position: sticky;
+          top: 0;
+          z-index: 100;
+        }
+        .nav-left {
+          display: flex;
+          align-items: center;
+        }
+        .ei-logo {
+          font-size: 26px;
+          font-weight: 900;
+          color: var(--ei-primary);
+          letter-spacing: -1px;
+          margin-right: 12px;
+        }
+        .nav-sub {
+          font-size: 14px;
+          font-weight: 600;
+          color: var(--text-muted);
+        }
+        .logout-btn {
+          background: transparent;
+          color: var(--ei-secondary-dark);
+          border: 1px solid var(--ei-secondary-light);
+          padding: 7px 14px;
+          border-radius: 6px;
+          font-size: 13px;
+          cursor: pointer;
+          display: none;
+          font-weight: 600;
+          transition: 0.2s;
+        }
+        .logout-btn:hover {
+          background: #edf2f7;
+          color: var(--ei-primary);
+        }
+
+        /* Stage Containers */
+        .stage-box {
+          max-width: 440px;
+          margin: 80px auto;
+          background: var(--surface);
+          padding: 40px;
+          border-radius: 16px;
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+          border: 1px solid var(--border-color);
+        }
+        .stage-title {
+          font-size: 22px;
+          font-weight: 800;
+          color: var(--ei-secondary-dark);
+          margin: 0 0 8px 0;
+          text-align: center;
+        }
+        .stage-desc {
+          font-size: 14px;
+          color: var(--text-muted);
+          margin: 0 0 24px 0;
+          text-align: center;
+          line-height: 1.5;
+        }
+
+        .input-group {
+          margin-bottom: 18px;
+        }
+        .input-group label {
+          display: block;
+          font-size: 13px;
+          font-weight: 700;
+          margin-bottom: 6px;
+          color: var(--ei-secondary-dark);
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+        }
+        .input-group input {
+          width: 100%;
+          padding: 13px 15px;
+          border: 1.5px solid var(--border-color);
+          border-radius: 8px;
+          font-size: 15px;
+          font-family: "Inter", sans-serif;
+          background-color: #fafafa;
+          transition: 0.2s;
+        }
+        .input-group input:focus {
+          border-color: var(--ei-primary);
+          outline: none;
+          background: #fff;
+          box-shadow: 0 0 0 3px rgba(160, 30, 33, 0.1);
+        }
+
+        button.primary-btn {
+          background-color: var(--ei-primary);
+          color: white;
+          border: none;
+          border-radius: 8px;
+          padding: 14px 20px;
+          font-size: 15px;
+          font-weight: 700;
+          cursor: pointer;
+          width: 100%;
+          transition: 0.2s;
+          margin-top: 8px;
+        }
+        button.primary-btn:hover {
+          background-color: #87191c;
+          transform: translateY(-1px);
+        }
+
+        #setupView,
+        #checkoutView {
+          display: none;
+        }
+
+        /* Checkout Layout */
+        .checkout-container {
+          max-width: 1240px;
+          margin: 40px auto 60px auto;
+          padding: 0 4%;
+        }
+        .checkout-grid {
+          display: flex;
+          gap: 36px;
+          align-items: flex-start;
+        }
+        .checkout-left {
+          flex: 1.75;
+        }
+        .checkout-right {
+          flex: 1.25;
+          position: sticky;
+          top: 90px;
+        }
+
+        /* School Header */
+        .school-banner {
+          background: linear-gradient(135deg, var(--surface) 0%, #fffdfd 100%);
+          border: 1px solid var(--border-color);
+          border-left: 5px solid var(--ei-primary);
+          padding: 22px 26px;
+          border-radius: 12px;
+          margin-bottom: 28px;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+        .sb-name {
+          font-size: 24px;
+          font-weight: 800;
+          color: var(--ei-secondary-dark);
+          margin: 0 0 4px 0;
+        }
+        .sb-badge {
+          font-size: 11px;
+          font-weight: 800;
+          background: var(--ei-primary-light);
+          color: var(--ei-primary);
+          padding: 4px 10px;
+          border-radius: 20px;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+        }
+
+        /* Pricing Row Top */
+        .base-pricing-row {
+          display: flex;
+          gap: 16px;
+          margin-bottom: 30px;
+        }
+        .bp-card {
+          flex: 1;
+          background: var(--surface);
+          padding: 18px 22px;
+          border-radius: 10px;
+          border: 1px solid var(--border-color);
+        }
+        .bp-card.active {
+          border: 2px solid var(--ei-primary);
+          background: var(--ei-primary-light);
+        }
+        .bp-label {
+          font-size: 11px;
+          text-transform: uppercase;
+          font-weight: 700;
+          color: var(--text-muted);
+          margin-bottom: 6px;
+          letter-spacing: 0.5px;
+        }
+        .bp-val {
+          font-size: 26px;
+          font-weight: 900;
+          color: var(--ei-secondary-dark);
+        }
+        .bp-card.active .bp-val {
+          color: var(--ei-primary);
+        }
+
+        .section-tag {
+          font-size: 12px;
+          font-weight: 800;
+          text-transform: uppercase;
+          color: var(--text-muted);
+          margin-bottom: 14px;
+          letter-spacing: 1px;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        }
+
+        /* Improved Module Selection Tab with Custom Radio Buttons */
+        .module-list {
+          display: flex;
+          flex-direction: column;
+          gap: 14px;
+          margin-bottom: 30px;
+        }
+        .module-item {
+          display: flex;
+          align-items: center;
+          gap: 16px;
+          padding: 18px 22px;
+          background: var(--surface);
+          border: 2px solid var(--border-color);
+          border-radius: 12px;
+          cursor: pointer;
+          transition: all 0.2s ease;
+          position: relative;
+        }
+        .module-item:hover {
+          border-color: rgba(160, 30, 33, 0.35);
+          background: #fcfcfd;
+          transform: translateY(-1px);
+        }
+        .module-item input[type="radio"] {
+          display: none;
+        }
+
+        /* Custom Radio Component */
+        .radio-indicator {
+          width: 20px;
+          height: 20px;
+          border-radius: 50%;
+          border: 2px solid var(--border-color);
+          flex-shrink: 0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: 0.2s;
+          background: #fff;
+        }
+        .radio-indicator::after {
+          content: "";
+          width: 10px;
+          height: 10px;
+          border-radius: 50%;
+          background: var(--ei-primary);
+          transform: scale(0);
+          transition: 0.2s transform ease;
+        }
+        .module-item:has(input[type="radio"]:checked) {
+          border-color: var(--ei-primary);
+          background-color: var(--ei-primary-light);
+          box-shadow: 0 4px 14px rgba(160, 30, 33, 0.08);
+        }
+        .module-item:has(input[type="radio"]:checked) .radio-indicator {
+          border-color: var(--ei-primary);
+        }
+        .module-item:has(input[type="radio"]:checked) .radio-indicator::after {
+          transform: scale(1);
+        }
+
+        .mi-left {
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+          flex: 1;
+        }
+        .mi-title-row {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          flex-wrap: wrap;
+        }
+        .mi-name {
+          font-size: 15px;
+          font-weight: 700;
+          color: var(--ei-secondary-dark);
+        }
+        .discount-pill {
+          display: inline-block;
+          background: #edf2f7;
+          color: var(--ei-secondary-dark);
+          font-size: 11px;
+          font-weight: 800;
+          padding: 3px 8px;
+          border-radius: 6px;
+          letter-spacing: 0.3px;
+        }
+        .discount-pill.bundle {
+          background: rgba(160, 30, 33, 0.1);
+          color: var(--ei-primary);
+          border: 1px solid rgba(160, 30, 33, 0.25);
+        }
+        .mi-subs {
+          font-size: 12px;
+          color: var(--text-muted);
+        }
+
+        .mi-right {
+          display: flex;
+          align-items: center;
+          gap: 20px;
+        }
+        .mi-mrp-group {
+          text-align: right;
+        }
+        .mi-mrp-label {
+          font-size: 9px;
+          text-transform: uppercase;
+          color: var(--text-muted);
+          font-weight: 700;
+          letter-spacing: 0.5px;
+        }
+        .mi-mrp-val {
+          font-size: 13px;
+          text-decoration: line-through;
+          color: var(--text-muted);
+          font-weight: 600;
+        }
+        .mi-price-group {
+          text-align: right;
+          min-width: 85px;
+        }
+        .mi-price-label {
+          font-size: 9px;
+          text-transform: uppercase;
+          color: var(--ei-primary);
+          font-weight: 800;
+          letter-spacing: 0.5px;
+        }
+        .mi-price-val {
+          font-size: 22px;
+          font-weight: 900;
+          color: var(--ei-secondary-dark);
+        }
+        .module-item:has(input[type="radio"]:checked) .mi-price-val {
+          color: var(--ei-primary);
+        }
+
+        /* Order Summary Checkout Card with Section 3 Nested */
+        .order-card {
+          background: var(--surface);
+          border: 1px solid var(--border-color);
+          border-top: 5px solid var(--ei-primary);
+          border-radius: 14px;
+          padding: 26px;
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+        }
+        .oc-title {
+          font-size: 18px;
+          font-weight: 800;
+          color: var(--ei-secondary-dark);
+          margin: 0 0 18px 0;
+          padding-bottom: 12px;
+          border-bottom: 1px solid var(--border-color);
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+        .oc-badge {
+          font-size: 11px;
+          background: #edf2f7;
+          padding: 3px 8px;
+          border-radius: 4px;
+          font-weight: 600;
+          color: var(--text-muted);
+        }
+
+        .oc-line {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 12px;
+          font-size: 13.5px;
+          color: var(--text-muted);
+        }
+        .oc-line strong {
+          color: var(--ei-secondary-dark);
+          font-weight: 700;
+        }
+        .oc-line.saving strong {
+          color: var(--success);
+        }
+
+        /* Nested Section 3: Promotional Campaign Inside Order Summary */
+        .summary-promo-section {
+          background: #f8fafc;
+          border: 1px solid var(--border-color);
+          border-radius: 10px;
+          padding: 16px;
+          margin: 18px 0;
+        }
+        .sps-header {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          margin-bottom: 10px;
+        }
+        .sps-title {
+          font-size: 12px;
+          font-weight: 800;
+          color: var(--ei-secondary-dark);
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+        }
+        .promo-row-compact {
+          display: flex;
+          gap: 8px;
+        }
+        .promo-row-compact select {
+          flex: 1;
+          padding: 10px 12px;
+          border-radius: 6px;
+          border: 1.5px solid var(--border-color);
+          font-size: 13px;
+          font-family: "Inter", sans-serif;
+          background-color: #fff;
+          color: var(--ei-secondary-dark);
+          font-weight: 600;
+          outline: none;
+        }
+        .promo-row-compact select:focus {
+          border-color: var(--ei-primary);
+        }
+        .promo-btn-compact {
+          background: var(--ei-secondary-dark);
+          color: white;
+          border: none;
+          border-radius: 6px;
+          padding: 0 16px;
+          font-size: 13px;
+          font-weight: 700;
+          cursor: pointer;
+          transition: 0.2s;
+        }
+        .promo-btn-compact:hover {
+          background: #1a202c;
+        }
+
+        .promo-alert-compact {
+          display: none;
+          margin-top: 10px;
+          padding: 8px 12px;
+          border-radius: 6px;
+          font-size: 12px;
+          font-weight: 600;
+          line-height: 1.4;
+        }
+        .promo-alert-compact.success {
+          background: var(--success-bg);
+          color: var(--success);
+          border: 1px solid #a7f3d0;
+        }
+        .promo-alert-compact.warning {
+          background: #fff5f5;
+          color: var(--ei-primary);
+          border: 1px solid #fed7d7;
+        }
+
+        .oc-divider {
+          height: 1px;
+          background: var(--border-color);
+          margin: 16px 0;
+        }
+
+        .total-panel {
+          background: #f8fafc;
+          border: 1px solid var(--border-color);
+          border-radius: 10px;
+          padding: 18px;
+          margin-top: 16px;
+        }
+        .total-label {
+          font-size: 11px;
+          text-transform: uppercase;
+          font-weight: 800;
+          color: var(--text-muted);
+          margin-bottom: 4px;
+          letter-spacing: 0.5px;
+        }
+        .total-amount {
+          font-size: 32px;
+          font-weight: 900;
+          color: var(--ei-secondary-dark);
+          line-height: 1;
+        }
+
+        .effective-badge-wrap {
+          margin-top: 14px;
+          padding-top: 12px;
+          border-top: 1px dashed var(--border-color);
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+        .net-cost-text {
+          font-size: 12px;
+          font-weight: 600;
+          color: var(--ei-primary);
+        }
+        .off-pill {
+          background: var(--success-bg);
+          color: var(--success);
+          border: 1px solid #a7f3d0;
+          font-size: 11px;
+          font-weight: 800;
+          padding: 4px 8px;
+          border-radius: 6px;
+        }
+
+        .pdf-btn {
+          background: var(--ei-primary);
+          color: white;
+          border: none;
+          border-radius: 8px;
+          padding: 14px;
+          font-size: 15px;
+          font-weight: 700;
+          width: 100%;
+          cursor: pointer;
+          margin-top: 20px;
+          transition: 0.2s;
+        }
+        .pdf-btn:hover {
+          background: #87191c;
+        }
+      }
+
+      /* Printable Document View */
+      @media print {
+        @page {
+          margin: 0.5in;
+          size: letter portrait;
+        }
+        .web-app-view,
+        .top-nav {
+          display: none !important;
+        }
+        .print-only-doc {
+          display: block !important;
+          background: #fff;
+          font-size: 11pt;
+          color: #000;
+        }
+        * {
+          -webkit-print-color-adjust: exact !important;
+          print-color-adjust: exact !important;
+        }
+
+        .doc-header {
+          text-align: center;
+          border-bottom: 2px solid var(--ei-primary);
+          padding-bottom: 12px;
+          margin-bottom: 24px;
+        }
+        .doc-header .logo {
+          font-size: 34px;
+          font-weight: 900;
+          color: var(--ei-primary);
+          line-height: 1;
+        }
+        .doc-header h2 {
+          font-size: 18px;
+          margin: 4px 0 0 0;
+          color: #2d3748;
+        }
+
+        .doc-school-title {
+          font-size: 22px;
+          font-weight: 800;
+          text-align: center;
+          margin-bottom: 24px;
+        }
+
+        .doc-table {
+          width: 100%;
+          border-collapse: collapse;
+          margin-bottom: 24px;
+          page-break-inside: avoid;
+        }
+        .doc-table th {
+          background: var(--ei-primary);
+          color: white;
+          text-align: left;
+          padding: 8px 10px;
+          font-size: 11px;
+          border: 1px solid #000;
+        }
+        .doc-table td {
+          padding: 8px 10px;
+          border: 1px solid #000;
+          font-size: 11px;
+        }
+        .doc-sub td {
+          background: #f7fafc;
+          font-weight: bold;
+        }
+
+        .doc-summary {
+          border: 2px solid var(--ei-primary);
+          border-radius: 8px;
+          padding: 16px;
+          margin-top: 20px;
+          page-break-inside: avoid;
+        }
+        .doc-row {
+          display: flex;
+          justify-content: space-between;
+          margin-bottom: 8px;
+          font-size: 12px;
+        }
+        .doc-row.total {
+          font-size: 16px;
+          font-weight: 900;
+          border-top: 1px solid #000;
+          padding-top: 8px;
+          margin-top: 8px;
+          color: var(--ei-primary);
+        }
+
+        .doc-footer {
+          margin-top: 36px;
+          text-align: center;
+          font-size: 10px;
+          color: #718096;
+          border-top: 1px solid #cbd5e0;
+          padding-top: 10px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navigation Bar -->
+    <div class="top-nav web-app-view">
+      <div class="nav-left">
+        <div class="ei-logo">Ei</div>
+        <div class="nav-sub">Partner Commercial Portal</div>
+      </div>
+      <button class="logout-btn" id="logoutBtn" onclick="logout()">
+        Sign Out
+      </button>
+    </div>
+
+    <!-- STEP 1: Authentication -->
+    <div class="stage-box web-app-view" id="loginStage">
+      <div class="ei-logo" style="text-align: center; margin-bottom: 12px">
+        Ei
+      </div>
+      <h2 class="stage-title">Agent Authentication</h2>
+      <p class="stage-desc">
+        Enter your credentials to initiate school proposals.
+      </p>
+
+      <div class="input-group">
+        <label for="username">Username</label>
+        <input type="text" id="username" placeholder="e.g. admin" />
+      </div>
+      <div class="input-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" placeholder="Enter password" />
+      </div>
+      <p
+        id="loginError"
+        style="
+          color: var(--ei-primary);
+          display: none;
+          font-size: 13px;
+          font-weight: 600;
+          text-align: center;
+          margin: -5px 0 12px 0;
+        "
+      >
+        Invalid username or password.
+      </p>
+      <button class="primary-btn" onclick="handleLogin()">Sign In</button>
+    </div>
+
+    <!-- STEP 2: School Setup Input -->
+    <div class="stage-box web-app-view" id="setupView">
+      <h2 class="stage-title">Configure School Baseline</h2>
+      <p class="stage-desc">
+        Enter the school's account details and current evaluation rate.
+      </p>
+
+      <div class="input-group">
+        <label for="inputSchoolName">School Name</label>
+        <input
+          type="text"
+          id="inputSchoolName"
+          placeholder="e.g. Greenwood High International"
+        />
+      </div>
+      <div class="input-group">
+        <label for="inputAssetPrice">Current ASSET Price (Per Student)</label>
+        <input
+          type="number"
+          id="inputAssetPrice"
+          placeholder="e.g. 600"
+          min="0"
+        />
+      </div>
+      <p
+        id="setupError"
+        style="
+          color: var(--ei-primary);
+          display: none;
+          font-size: 13px;
+          font-weight: 600;
+          text-align: center;
+          margin: -5px 0 12px 0;
+        "
+      >
+        Please complete all fields with valid values.
+      </p>
+      <button class="primary-btn" onclick="proceedToCheckout()">
+        Open Checkout Dashboard
+      </button>
+    </div>
+
+    <!-- STEP 3: Full Checkout View -->
+    <div class="checkout-container web-app-view" id="checkoutView">
+      <div class="school-banner">
+        <div>
+          <div class="sb-badge">Active School Configuration</div>
+          <h1 class="sb-name" id="displaySchoolName">School Name</h1>
+          <span style="font-size: 13px; color: var(--text-muted)"
+            >Evaluation & Skillbook Implementation Blueprint (AY 2027)</span
+          >
+        </div>
+        <button
+          style="
+            background: transparent;
+            border: 1px solid var(--border-color);
+            padding: 8px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--ei-secondary-dark);
+          "
+          onclick="editSchoolDetails()"
+        >
+          Change Baseline
+        </button>
+      </div>
+
+      <div class="checkout-grid">
+        <!-- Left: Configuration Options -->
+        <div class="checkout-left">
+          <div class="section-tag">1. Baseline Assessment Pricing</div>
+          <div class="base-pricing-row">
+            <div class="bp-card">
+              <div class="bp-label">Current AY26 Base Price</div>
+              <div class="bp-val" id="valCurrentAsset">₹0</div>
+            </div>
+            <div class="bp-card active">
+              <div class="bp-label">Projected AY27 Base Price (+10%)</div>
+              <div class="bp-val" id="valProjectedAsset">₹0</div>
+            </div>
+          </div>
+
+          <!-- Enhanced Select Skillbook Module Package Tab -->
+          <div class="section-tag">2. Select Skillbook Module Package</div>
+          <div class="module-list">
+            <label class="module-item">
+              <input
+                type="radio"
+                name="sb-module"
+                value="599"
+                data-name="Complete Core Suite (Eng + Math + Sci)"
+                checked
+                onchange="recalculate()"
+              />
+              <div class="radio-indicator"></div>
+              <div class="mi-left">
+                <div class="mi-title-row">
+                  <span class="mi-name"
+                    >Complete Core Suite (English + Maths + Science)</span
+                  >
+                  <span class="discount-pill bundle">50% BUNDLE DISCOUNT</span>
+                </div>
+                <span class="mi-subs"
+                  >Foundational thinking & competency-based mastery across core
+                  curriculum</span
+                >
+              </div>
+              <div class="mi-right">
+                <div class="mi-mrp-group">
+                  <span class="mi-mrp-label">Standard MRP</span>
+                  <div class="mi-mrp-val">₹1197</div>
+                </div>
+                <div class="mi-price-group">
+                  <span class="mi-price-label">Partner Price</span>
+                  <div class="mi-price-val">₹599</div>
+                </div>
+              </div>
+            </label>
+
+            <label class="module-item">
+              <input
+                type="radio"
+                name="sb-module"
+                value="849"
+                data-name="Premium Suite (+ AI & DT)"
+                onchange="recalculate()"
+              />
+              <div class="radio-indicator"></div>
+              <div class="mi-left">
+                <div class="mi-title-row">
+                  <span class="mi-name"
+                    >Premium Suite (Core Suite + AI & DT)</span
+                  >
+                  <span class="discount-pill bundle">50% BUNDLE DISCOUNT</span>
+                </div>
+                <span class="mi-subs"
+                  >Full academic package including 21st-century digital
+                  competencies</span
+                >
+              </div>
+              <div class="mi-right">
+                <div class="mi-mrp-group">
+                  <span class="mi-mrp-label">Standard MRP</span>
+                  <div class="mi-mrp-val">₹1696</div>
+                </div>
+                <div class="mi-price-group">
+                  <span class="mi-price-label">Partner Price</span>
+                  <div class="mi-price-val">₹849</div>
+                </div>
+              </div>
+            </label>
+
+            <label class="module-item">
+              <input
+                type="radio"
+                name="sb-module"
+                value="349"
+                data-name="AI & DT Standalone"
+                onchange="recalculate()"
+              />
+              <div class="radio-indicator"></div>
+              <div class="mi-left">
+                <div class="mi-title-row">
+                  <span class="mi-name"
+                    >AI & Digital Technologies (Standalone)</span
+                  >
+                  <span class="discount-pill">30% DISCOUNT</span>
+                </div>
+                <span class="mi-subs"
+                  >Hands-on computational problem-solving, algorithms, and
+                  applied logic</span
+                >
+              </div>
+              <div class="mi-right">
+                <div class="mi-mrp-group">
+                  <span class="mi-mrp-label">Standard MRP</span>
+                  <div class="mi-mrp-val">₹499</div>
+                </div>
+                <div class="mi-price-group">
+                  <span class="mi-price-label">Partner Price</span>
+                  <div class="mi-price-val">₹349</div>
+                </div>
+              </div>
+            </label>
+
+            <label class="module-item">
+              <input
+                type="radio"
+                name="sb-module"
+                value="279"
+                data-name="English Standalone"
+                onchange="recalculate()"
+              />
+              <div class="radio-indicator"></div>
+              <div class="mi-left">
+                <div class="mi-title-row">
+                  <span class="mi-name">English Standalone Module</span>
+                  <span class="discount-pill">30% DISCOUNT</span>
+                </div>
+                <span class="mi-subs"
+                  >Reading comprehension, grammar analysis, and structural
+                  reasoning</span
+                >
+              </div>
+              <div class="mi-right">
+                <div class="mi-mrp-group">
+                  <span class="mi-mrp-label">Standard MRP</span>
+                  <div class="mi-mrp-val">₹399</div>
+                </div>
+                <div class="mi-price-group">
+                  <span class="mi-price-label">Partner Price</span>
+                  <div class="mi-price-val">₹279</div>
+                </div>
+              </div>
+            </label>
+
+            <label class="module-item">
+              <input
+                type="radio"
+                name="sb-module"
+                value="279"
+                data-name="Maths Standalone"
+                onchange="recalculate()"
+              />
+              <div class="radio-indicator"></div>
+              <div class="mi-left">
+                <div class="mi-title-row">
+                  <span class="mi-name">Mathematics Standalone Module</span>
+                  <span class="discount-pill">30% DISCOUNT</span>
+                </div>
+                <span class="mi-subs"
+                  >Mathematical reasoning, numerical fluency, and real-world
+                  application</span
+                >
+              </div>
+              <div class="mi-right">
+                <div class="mi-mrp-group">
+                  <span class="mi-mrp-label">Standard MRP</span>
+                  <div class="mi-mrp-val">₹399</div>
+                </div>
+                <div class="mi-price-group">
+                  <span class="mi-price-label">Partner Price</span>
+                  <div class="mi-price-val">₹279</div>
+                </div>
+              </div>
+            </label>
+
+            <label class="module-item">
+              <input
+                type="radio"
+                name="sb-module"
+                value="279"
+                data-name="Science Standalone"
+                onchange="recalculate()"
+              />
+              <div class="radio-indicator"></div>
+              <div class="mi-left">
+                <div class="mi-title-row">
+                  <span class="mi-name">Science Standalone Module</span>
+                  <span class="discount-pill">30% DISCOUNT</span>
+                </div>
+                <span class="mi-subs"
+                  >Scientific inquiry, evidence evaluation, and conceptual
+                  clarity</span
+                >
+              </div>
+              <div class="mi-right">
+                <div class="mi-mrp-group">
+                  <span class="mi-mrp-label">Standard MRP</span>
+                  <div class="mi-mrp-val">₹399</div>
+                </div>
+                <div class="mi-price-group">
+                  <span class="mi-price-label">Partner Price</span>
+                  <div class="mi-price-val">₹279</div>
+                </div>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <!-- Right: Checkout Order Summary Card (Now containing Section 3) -->
+        <div class="checkout-right">
+          <div class="order-card">
+            <div class="oc-title">
+              <span>Order Summary</span>
+              <span class="oc-badge">AY 2027 Proposal</span>
+            </div>
+
+            <div class="oc-line">
+              <span>AY27 Projected ASSET Base</span>
+              <strong id="ocAssetVal">₹0</strong>
+            </div>
+            <div class="oc-line">
+              <span id="ocModuleName">Core Suite</span>
+              <strong id="ocModuleVal">₹0</strong>
+            </div>
+
+            <div class="oc-divider"></div>
+
+            <div class="oc-line">
+              <span>Combined Subtotal</span>
+              <strong id="ocSubtotal">₹0</strong>
+            </div>
+
+            <!-- 3. Promotional Campaign Discounts (Moved Inside Order Summary) -->
+            <div class="summary-promo-section">
+              <div class="sps-header">
+                <span class="sps-title">3. Promotional Campaign</span>
+                <span style="font-size: 11px; color: var(--text-muted)"
+                  >Incentive</span
+                >
+              </div>
+              <div class="promo-row-compact">
+                <select id="promoSelector">
+                  <option value="0">-- No Campaign Selected --</option>
+                  <option value="25">September Early Adoption (25% Off)</option>
+                </select>
+                <button class="promo-btn-compact" onclick="applyPromo()">
+                  Apply
+                </button>
+              </div>
+              <div id="promoAlertBox" class="promo-alert-compact"></div>
+            </div>
+
+            <div class="oc-line saving" id="ocPromoLine" style="display: none">
+              <span id="ocPromoTitle">Promotional Savings</span>
+              <strong id="ocSavingsVal">- ₹0</strong>
+            </div>
+
+            <div class="total-panel">
+              <div class="total-label">Final Effective Rate / Student</div>
+              <div class="total-amount" id="ocFinalTotal">₹0</div>
+
+              <div class="effective-badge-wrap">
+                <span class="net-cost-text" id="ocNetCost"
+                  >Net Module Cost: ₹0</span
+                >
+                <span class="off-pill" id="ocOffPercent">0% OFF MRP</span>
+              </div>
+            </div>
+
+            <button class="pdf-btn" onclick="triggerPrint()">
+              Download Proposal PDF
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRINT ONLY VIEW (True text-based PDF Layout) -->
+    <div class="print-only-doc" id="printDocument">
+      <div class="doc-header">
+        <div class="logo">Ei</div>
+        <h2>Commercial Architecture Proposal</h2>
+        <p style="margin: 3px 0 0 0; font-size: 11px; color: #4a5568">
+          Valid for Academic Year 2027 Adoption
+        </p>
+      </div>
+
+      <div class="doc-school-title" id="docSchoolName">School Name</div>
+
+      <table class="doc-table">
+        <tr>
+          <th colspan="2">1. Core Assessment Baseline (ASSET)</th>
+        </tr>
+        <tr class="doc-sub">
+          <td style="width: 50%">Current Baseline Rate</td>
+          <td style="width: 50%">Projected Rate for AY 2027 (+10%)</td>
+        </tr>
+        <tr>
+          <td id="docCurrentRate">₹0</td>
+          <td id="docProjectedRate">₹0</td>
+        </tr>
+      </table>
+
+      <table class="doc-table">
+        <tr>
+          <th colspan="4">2. Selected Skillbook Curriculum Architecture</th>
+        </tr>
+        <tr class="doc-sub">
+          <td>Module Selected</td>
+          <td>Standard MRP</td>
+          <td>Discount Applied</td>
+          <td>Partner Rate</td>
+        </tr>
+        <tr>
+          <td id="docModuleName" style="font-weight: bold">Suite</td>
+          <td id="docModuleMrp">₹0</td>
+          <td id="docModuleDisc">Calculated</td>
+          <td id="docModulePrice" style="font-weight: bold">₹0</td>
+        </tr>
+      </table>
+
+      <div class="doc-summary">
+        <div
+          style="
+            font-weight: bold;
+            margin-bottom: 12px;
+            border-bottom: 1px solid #cbd5e0;
+            padding-bottom: 6px;
+          "
+        >
+          3. Proposal Commercial Summary
+        </div>
+        <div class="doc-row">
+          <span>Base ASSET Rate (AY27):</span><span id="docAssetBase">₹0</span>
+        </div>
+        <div class="doc-row">
+          <span>Selected Module Rate:</span><span id="docModuleBase">₹0</span>
+        </div>
+        <div class="doc-row" style="font-weight: bold">
+          <span>Combined Subtotal:</span><span id="docSubtotal">₹0</span>
+        </div>
+
+        <div
+          class="doc-row"
+          id="docPromoRow"
+          style="color: var(--ei-primary); display: none"
+        >
+          <span id="docPromoLabel">Promotional Discount</span>
+          <span id="docPromoAmount">- ₹0</span>
+        </div>
+
+        <div class="doc-row total">
+          <span>Final Cost Per Student:</span>
+          <span id="docFinalTotal">₹0</span>
+        </div>
+
+        <div
+          style="
+            margin-top: 14px;
+            font-size: 11px;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+          "
+        >
+          <span
+            >* Net out-of-pocket for Skillbook suite:
+            <span id="docNetCost">₹0</span></span
+          >
+          <span id="docSavingsPercent" style="color: #059669">0% OFF MRP</span>
+        </div>
+      </div>
+
+      <div class="doc-footer">
+        Generated securely via Ei Partner Commercial System.<br />Confidential
+        pricing valid for educational institution implementation only.
+      </div>
+    </div>
+
+    <script>
+      // State
+      let currentAssetRate = 0;
+      let projectedAssetRate = 0;
+      let schoolName = "";
+      let appliedPromoPercent = 0;
+      let appliedPromoName = "";
+
+      function handleLogin() {
+        const user = document.getElementById("username").value.trim();
+        const pass = document.getElementById("password").value.trim();
+
+        if (user && pass) {
+          document.getElementById("loginStage").style.display = "none";
+          document.getElementById("setupView").style.display = "block";
+          document.getElementById("logoutBtn").style.display = "block";
+        } else {
+          document.getElementById("loginError").style.display = "block";
+        }
+      }
+
+      function logout() {
+        window.location.reload();
+      }
+
+      function proceedToCheckout() {
+        const nameInput = document
+          .getElementById("inputSchoolName")
+          .value.trim();
+        const priceInput = parseFloat(
+          document.getElementById("inputAssetPrice").value,
+        );
+
+        if (!nameInput || isNaN(priceInput) || priceInput <= 0) {
+          document.getElementById("setupError").style.display = "block";
+          return;
+        }
+
+        schoolName = nameInput;
+        currentAssetRate = priceInput;
+        projectedAssetRate = priceInput * 1.1;
+
+        document.getElementById("setupView").style.display = "none";
+        document.getElementById("checkoutView").style.display = "block";
+
+        // Render Static School Values
+        document.getElementById("displaySchoolName").innerText = schoolName;
+        document.getElementById("valCurrentAsset").innerText =
+          "₹" + currentAssetRate.toFixed(0);
+        document.getElementById("valProjectedAsset").innerText =
+          "₹" + projectedAssetRate.toFixed(0);
+        document.getElementById("ocAssetVal").innerText =
+          "₹" + projectedAssetRate.toFixed(0);
+
+        recalculate();
+      }
+
+      function editSchoolDetails() {
+        document.getElementById("checkoutView").style.display = "none";
+        document.getElementById("setupView").style.display = "block";
+      }
+
+      function applyPromo() {
+        const select = document.getElementById("promoSelector");
+        appliedPromoPercent = parseFloat(select.value);
+        appliedPromoName = select.options[select.selectedIndex].text;
+        recalculate();
+      }
+
+      function recalculate() {
+        const selectedRadio = document.querySelector(
+          'input[name="sb-module"]:checked',
+        );
+        const modulePrice = parseFloat(selectedRadio.value);
+        const moduleName = selectedRadio.getAttribute("data-name");
+
+        const mrpText = selectedRadio
+          .closest(".module-item")
+          .querySelector(".mi-mrp-val").innerText;
+        const mrpPrice = parseFloat(mrpText.replace(/[^0-9.]/g, ""));
+        const discText = selectedRadio
+          .closest(".module-item")
+          .querySelector(".discount-pill").innerText;
+
+        // Conditional Promotion Check: Exclude Standalone Modules
+        const isStandalone = moduleName.includes("Standalone");
+        let activeDiscountPercent = appliedPromoPercent;
+        const alertBox = document.getElementById("promoAlertBox");
+
+        if (appliedPromoPercent > 0) {
+          alertBox.style.display = "block";
+          if (isStandalone) {
+            activeDiscountPercent = 0; // Block promo
+            alertBox.className = "promo-alert-compact warning";
+            alertBox.innerText = "⚠ Offer valid on Complete Suites only.";
+          } else {
+            alertBox.className = "promo-alert-compact success";
+            alertBox.innerText = "✓ " + appliedPromoName + " applied!";
+          }
+        } else {
+          alertBox.style.display = "none";
+        }
+
+        // Calculations
+        const subtotal = projectedAssetRate + modulePrice;
+        const discountAmount = subtotal * (activeDiscountPercent / 100);
+        const finalTotal = subtotal - discountAmount;
+        const netCost = finalTotal - projectedAssetRate;
+
+        let effectiveSavingsPercent = 0;
+        if (mrpPrice > 0) {
+          effectiveSavingsPercent = Math.max(
+            0,
+            ((mrpPrice - netCost) / mrpPrice) * 100,
+          );
+        }
+
+        // Update Web Checkout UI
+        document.getElementById("ocModuleName").innerText = moduleName;
+        document.getElementById("ocModuleVal").innerText = "₹" + modulePrice;
+        document.getElementById("ocSubtotal").innerText =
+          "₹" + subtotal.toFixed(0);
+        document.getElementById("ocFinalTotal").innerText =
+          "₹" + finalTotal.toFixed(2);
+        document.getElementById("ocNetCost").innerText =
+          "Net Module Cost: ₹" + netCost.toFixed(2);
+        document.getElementById("ocOffPercent").innerText =
+          effectiveSavingsPercent.toFixed(0) + "% OFF MRP";
+
+        if (activeDiscountPercent > 0) {
+          document.getElementById("ocPromoLine").style.display = "flex";
+          document.getElementById("ocPromoTitle").innerText = appliedPromoName;
+          document.getElementById("ocSavingsVal").innerText =
+            "- ₹" + discountAmount.toFixed(2);
+        } else {
+          document.getElementById("ocPromoLine").style.display = "none";
+        }
+
+        // Update Print Document
+        document.getElementById("docSchoolName").innerText = schoolName;
+        document.getElementById("docCurrentRate").innerText =
+          "₹" + currentAssetRate.toFixed(0);
+        document.getElementById("docProjectedRate").innerText =
+          "₹" + projectedAssetRate.toFixed(0);
+        document.getElementById("docModuleName").innerText = moduleName;
+        document.getElementById("docModuleMrp").innerText = mrpText;
+        document.getElementById("docModuleDisc").innerText = discText;
+        document.getElementById("docModulePrice").innerText = "₹" + modulePrice;
+
+        document.getElementById("docAssetBase").innerText =
+          "₹" + projectedAssetRate.toFixed(0);
+        document.getElementById("docModuleBase").innerText = "₹" + modulePrice;
+        document.getElementById("docSubtotal").innerText =
+          "₹" + subtotal.toFixed(0);
+
+        if (activeDiscountPercent > 0) {
+          document.getElementById("docPromoRow").style.display = "flex";
+          document.getElementById("docPromoLabel").innerText = appliedPromoName;
+          document.getElementById("docPromoAmount").innerText =
+            "- ₹" + discountAmount.toFixed(2);
+        } else {
+          document.getElementById("docPromoRow").style.display = "none";
+        }
+
+        document.getElementById("docFinalTotal").innerText =
+          "₹" + finalTotal.toFixed(2);
+        document.getElementById("docNetCost").innerText =
+          "₹" + netCost.toFixed(2);
+        document.getElementById("docSavingsPercent").innerText =
+          effectiveSavingsPercent.toFixed(0) + "% OFF MRP";
+      }
+
+      function triggerPrint() {
+        const originalTitle = document.title;
+        const cleanName = schoolName.replace(/[^a-z0-9]/gi, "_");
+        document.title = `Ei_Commercial_Architecture_${cleanName}`;
+        window.print();
+        setTimeout(() => {
+          document.title = originalTitle;
+        }, 1000);
+      }
+    </script>
+  </body>
+</html>
